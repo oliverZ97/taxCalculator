@@ -6,19 +6,20 @@
 <body>
 
 <h1>Tax Calculator</h1>
+<button onclick=createInputFormula(3)>Create Input!</button>
 <div id="content">
-    <div>
-        <input type="text" id="netto" placeholder="Netto">
+    <!-- <div>
+        <input type="text" id="netto" placeholder="Netto" onchange=getInputFromNetto()>
         <div id="dropdown">
-            <select name="tax_type" id="tax_type">
+            <select name="tax_type" id="tax_type" onchange=getInputFromTax()>
                 <option value="zero">0%</option>
                 <option value="seven">7%</option>
                 <option value="nineteen">19%</option>
             </select>
         </div>
         <input type="text" id="brutto" placeholder="Brutto">
-    </div>
+    </div> -->
 </div>
-
+<script src="./index.js"></script>
 </body>
 </html> 
