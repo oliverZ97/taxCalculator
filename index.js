@@ -7,6 +7,10 @@ function getInputFromNetto(id) {
 function getInputFromTax(id) {
     return document.getElementById(id).value;
 }
+
+function getInputFromBrutto(id) {
+    return document.getElementById(id).value;
+}
 //**************************************************************************************/
 //**CALCULATE BRUTTO TAX****************************************************************/
 function calculateBrutto(netto_id, tax_id, brutto_id) {
@@ -19,10 +23,38 @@ function calculateBrutto(netto_id, tax_id, brutto_id) {
     setBruttoToDisplayOnChange(brutto, brutto_id)
 }
 
+//**CALCULATE NETTO TAX*****************************************************************/
+function calculateNetto(netto_id, tax_id, brutto_id) {
+    let brutto = getInputFromBrutto(brutto_id);
+    let tax = getInputFromTax(tax_id);
+    let netto = parseFloat(brutto);
+    if(tax != 0){
+        netto = brutto/(100 + tax);
+    } 
+    console.log(netto);
+    setNettoToDisplayOnChange(netto, netto_id)
+}
+
+function checkNettoOrBrutto(netto_id, tax_id, brutto_id) {
+    if(document.getElementById(netto_id).value === undefined){
+        console.log("NETTO");
+        calculateNetto(netto_id, tax_id, brutto_id)
+    } else {
+        console.log("BRUTTO")
+        calculateBrutto(netto_id, tax_id, brutto_id)
+    }
+}
+
 //**SET BRUTTO TO DISPLAY***************************************************************/
 function setBruttoToDisplayOnChange(brutto, brutto_id) {
-    document.getElementById(brutto_id).value = brutto
+    document.getElementById(brutto_id).value = brutto;
 }
+
+//**SET NETTO TO DISPLAY****************************************************************/
+function setNettoToDisplayOnChange(netto, netto_id) {
+    document.getElementById(netto_id).value = netto;
+}
+
 function createInputFormula(number) {
     let content = document.getElementById("content");
     let numberOfGroups = number
@@ -44,13 +76,12 @@ function createInputFormula(number) {
         nettoInput.setAttribute("id", "nettoInput_" + i);
         nettoInput.setAttribute("placeholder", "Netto");
         nettoInput.setAttribute("type", "text");
-        nettoInput.onchange = () => { calculateBrutto("nettoInput_" + i, "taxType" + i, "bruttoInput_" + i) };
+        nettoInput.onchange = () => { checkNettoOrBrutto("nettoInput_" + i, "taxType" + i, "bruttoInput_" + i) };
 
         //add taxDropdown attributes
         taxDropdown.setAttribute("id", "taxType" + i);
         taxDropdown.setAttribute("name", "taxType");
-        taxDropdown.onchange = () => { calculateBrutto("nettoInput_" + i, "taxType" + i, "bruttoInput_" + i) };
-
+        taxDropdown.onchange = () => { checkNettoOrBrutto("nettoInput_" + i, "taxType" + i, "bruttoInput_" + i) };
 
         //add bruttoInput attributes
         bruttoInput.setAttribute("id", "bruttoInput_" + i);
