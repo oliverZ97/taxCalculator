@@ -9,14 +9,19 @@ function getInputFromTax(id) {
 }
 //**************************************************************************************/
 //**CALCULATE BRUTTO TAX****************************************************************/
-function calculateBrutto(netto_id, tax_id) {
+function calculateBrutto(netto_id, tax_id, brutto_id) {
     let netto = getInputFromNetto(netto_id);
     let tax = getInputFromTax(tax_id);
     let brutto = parseFloat(netto);
     if(tax != "0") {
         brutto = parseFloat(netto) + parseFloat(((netto/100)*tax).toFixed(2))
     }
-    console.log("brutto", brutto);
+    setBruttoToDisplayOnChange(brutto, brutto_id)
+}
+
+//**SET BRUTTO TO DISPLAY***************************************************************/
+function setBruttoToDisplayOnChange(brutto, brutto_id) {
+    document.getElementById(brutto_id).value = brutto
 }
 function createInputFormula(number) {
     let content = document.getElementById("content");
@@ -39,12 +44,12 @@ function createInputFormula(number) {
         nettoInput.setAttribute("id", "nettoInput_" + i);
         nettoInput.setAttribute("placeholder", "Netto");
         nettoInput.setAttribute("type", "text");
-        nettoInput.onchange = () => { calculateBrutto("nettoInput_" + i, "taxType" + i) };
+        nettoInput.onchange = () => { calculateBrutto("nettoInput_" + i, "taxType" + i, "bruttoInput_" + i) };
 
         //add taxDropdown attributes
         taxDropdown.setAttribute("id", "taxType" + i);
         taxDropdown.setAttribute("name", "taxType");
-        taxDropdown.onchange = () => { calculateBrutto("nettoInput_" + i, "taxType" + i) };
+        taxDropdown.onchange = () => { calculateBrutto("nettoInput_" + i, "taxType" + i, "bruttoInput_" + i) };
 
 
         //add bruttoInput attributes
