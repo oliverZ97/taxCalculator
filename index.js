@@ -1,7 +1,7 @@
 //**************************************************************************************/
 //**GET VALUES OF THE INPUT FIELDS******************************************************/
 function getInputFromNetto(id) {
-    return document.getElementById(id).value;
+    return checkValidChars(document.getElementById(id).value);
 }
 
 function getInputFromTax(id) {
@@ -9,7 +9,17 @@ function getInputFromTax(id) {
 }
 
 function getInputFromBrutto(id) {
-    return document.getElementById(id).value;
+    return checkValidChars(document.getElementById(id).value);
+}
+
+function checkValidChars(input) {
+    let regex = RegExp(/[a-zA-Z!\"§$%&\/\(\),]/g);
+    if (regex.test(input)) {
+        console.log("Please Check your input only contains numbers or a point")
+        return 0;
+    } else {
+        return input
+    }
 }
 //**************************************************************************************/
 //**CALCULATE BRUTTO TAX****************************************************************/
@@ -55,9 +65,12 @@ function setNettoToDisplayOnChange(netto, netto_id) {
     document.getElementById(netto_id).value = netto;
 }
 
-function createInputFormula(number) {
+function createInputFormula() {
     let content = document.getElementById("content");
-    let numberOfGroups = number
+    let numberOfGroups = 1
+    if(!content.hasChildNodes()){
+        numberOfGroups = 3
+    }
     for (let i = 0; i < numberOfGroups; i++) {
         let container = document.createElement("div");
         let nettoInput = document.createElement("input");
@@ -76,6 +89,7 @@ function createInputFormula(number) {
         nettoInput.setAttribute("id", "nettoInput_" + i);
         nettoInput.setAttribute("placeholder", "Netto");
         nettoInput.setAttribute("type", "text");
+        //nettoInput.setAttribute("pattern", "[0-9.]+")
         nettoInput.onchange = () => { checkNettoOrBrutto("nettoInput_" + i, "taxType" + i, "bruttoInput_" + i) };
 
         //add taxDropdown attributes
@@ -87,6 +101,7 @@ function createInputFormula(number) {
         bruttoInput.setAttribute("id", "bruttoInput_" + i);
         bruttoInput.setAttribute("placeholder", "Brutto");
         bruttoInput.setAttribute("type", "text");
+        //bruttoInput.setAttribute("pattern", "[0-9.]+")
 
         //add option attributes
         taxZero.setAttribute("value", "0");
