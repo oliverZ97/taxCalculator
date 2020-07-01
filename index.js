@@ -24,18 +24,19 @@ function checkValidChars(input) {
 //**************************************************************************************/
 //**CALCULATE BRUTTO TAX****************************************************************/
 function calculateBrutto(netto_id, tax_id, brutto_id) {
-    let netto = getInputFromNetto(netto_id);
+    let netto = getInputFromNetto(netto_id).replace(" €", "");
     let tax = getInputFromTax(tax_id);
     let brutto = parseFloat(netto);
     if(tax != "0") {
-        brutto = parseFloat(netto) + parseFloat(((netto/100)*tax).toFixed(2))
+        brutto = (parseFloat(netto) + parseFloat(((netto/100)*tax))).toFixed(2)
     }
     setBruttoToDisplayOnChange(brutto, brutto_id)
+    calcResult()
 }
 
 //**CALCULATE NETTO TAX*****************************************************************/
 function calculateNetto(netto_id, tax_id, brutto_id) {
-    let brutto = getInputFromBrutto(brutto_id);
+    let brutto = getInputFromBrutto(brutto_id).replace(" €", "");
     let tax = getInputFromTax(tax_id);
     let netto = parseFloat(brutto);
     if(tax != 0){
@@ -43,26 +44,36 @@ function calculateNetto(netto_id, tax_id, brutto_id) {
         netto = (brutto/taxVal).toFixed(2);
     } 
     setNettoToDisplayOnChange(netto, netto_id)
+    calcResult()
 }
 
 function checkNettoOrBrutto(netto_id, tax_id, brutto_id) {
     if(document.getElementById(netto_id).value === ""){
         if(document.getElementById(brutto_id).value !== ""){
+            setEuroSignToInput(brutto_id);
             calculateNetto(netto_id, tax_id, brutto_id)
         }
     } else {
+        setEuroSignToInput(netto_id);
         calculateBrutto(netto_id, tax_id, brutto_id)
     }
 }
 
 //**SET BRUTTO TO DISPLAY***************************************************************/
 function setBruttoToDisplayOnChange(brutto, brutto_id) {
-    document.getElementById(brutto_id).value = brutto;
+    document.getElementById(brutto_id).value = brutto + " €";
 }
 
 //**SET NETTO TO DISPLAY****************************************************************/
 function setNettoToDisplayOnChange(netto, netto_id) {
-    document.getElementById(netto_id).value = netto;
+    document.getElementById(netto_id).value = netto + " €";
+}
+
+function setEuroSignToInput(id) {
+
+    let val = document.getElementById(id).value;
+    val = val.replace(" €", "");
+    document.getElementById(id).value = val + " €";
 }
 
 function createInputFormula() {
@@ -102,6 +113,7 @@ function createInputFormula() {
         bruttoInput.setAttribute("placeholder", "Brutto");
         bruttoInput.setAttribute("type", "text");
         //bruttoInput.setAttribute("pattern", "[0-9.]+")
+        bruttoInput.onchange = () => { checkNettoOrBrutto("nettoInput_" + i, "taxType" + i, "bruttoInput_" + i) };
 
         //add option attributes
         taxZero.setAttribute("value", "0");
@@ -124,4 +136,33 @@ function createInputFormula() {
         //add container to content
         content.appendChild(container);
     }
+}
+
+function calcResult() {
+    let netTotal = 0;
+    let brutTotal = 0;
+    let inputFields = Object.values(document.getElementsByTagName("input"));
+    inputFields.forEach(element => {
+        let value;
+        if(element.value === "") {
+            value = 0;
+        } else {
+            value = parseFloat(element.value)
+        }
+        if(element.placeholder === "Netto"){
+            netTotal += value
+        } else {
+            brutTotal += value
+        }
+    });
+    let taxTotal = (brutTotal - netTotal).toFixed(2);
+    netTotal = netTotal.toFixed(2);
+    brutTotal = brutTotal.toFixed(2);
+    setTotalToTextFields(brutTotal, netTotal, taxTotal)
+}
+
+function setTotalToTextFields(brutTotal, netTotal, taxTotal) {
+    document.getElementById("netTotal").innerHTML = netTotal + " €";
+    document.getElementById("taxTotal").innerHTML = taxTotal + " €";
+    document.getElementById("brutTotal").innerHTML = brutTotal + " €";
 }
