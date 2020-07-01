@@ -87,6 +87,8 @@ function createInputFormula() {
         let nettoInput = document.createElement("input");
         let taxDropdown = document.createElement("select");
         let bruttoInput = document.createElement("input");
+        let bruttoContainer = document.createElement("div")
+        let resetFields = document.createElement("button");
 
         //create Options for SelectTag
         let taxZero = document.createElement("option");
@@ -95,6 +97,7 @@ function createInputFormula() {
 
         //add container attributes
         container.setAttribute("id", "container_" + i);
+        container.setAttribute("class", "container");
 
         //add nettoInput attributes
         nettoInput.setAttribute("id", "nettoInput_" + i);
@@ -115,6 +118,12 @@ function createInputFormula() {
         //bruttoInput.setAttribute("pattern", "[0-9.]+")
         bruttoInput.onchange = () => { checkNettoOrBrutto("nettoInput_" + i, "taxType" + i, "bruttoInput_" + i) };
 
+        //add resetFieldButton attributes
+        resetFields.textContent = "Reset"
+        resetFields.onclick = () => {
+            resetFieldsInContainer("container_" + i)
+        }
+
         //add option attributes
         taxZero.setAttribute("value", "0");
         taxZero.text = "0%";
@@ -129,9 +138,11 @@ function createInputFormula() {
         taxDropdown.appendChild(taxNineteen);
 
         //append fields to container
+        bruttoContainer.appendChild(bruttoInput);
+        bruttoContainer.appendChild(resetFields);
         container.appendChild(nettoInput);
         container.appendChild(taxDropdown);
-        container.appendChild(bruttoInput);
+        container.appendChild(bruttoContainer);
 
         //add container to content
         content.appendChild(container);
@@ -165,4 +176,22 @@ function setTotalToTextFields(brutTotal, netTotal, taxTotal) {
     document.getElementById("netTotal").innerHTML = netTotal + " €";
     document.getElementById("taxTotal").innerHTML = taxTotal + " €";
     document.getElementById("brutTotal").innerHTML = brutTotal + " €";
+}
+
+function resetFieldsInContainer(containerId){
+    let fields = Object.values(document.getElementById(containerId).children);
+    fields.forEach((element) => {
+        switch(element.tagName) {
+            case "INPUT": 
+                element.value = "";
+                break;
+            case "SELECT": 
+                element.selectedIndex = 0;
+                break;
+            case "DIV":
+                Object.values(element.children)[0].value = "";
+                break;
+        }
+    })
+    calcResult();
 }

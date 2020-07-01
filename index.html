@@ -1,19 +1,35 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Tax Calculator</title>
-</head>
-<body>
 
-<h1>Tax Calculator</h1>
-<button onclick=createInputFormula()>Create Input!</button>
-<div id="content"></div>
-<div id="results">
-    <p id="netTotal">0,00 €</p>
-    <p id="taxTotal">0,00 €</p>
-    <p id="brutTotal">0,00 €</p>
-</div>
-<script src="./index.js"></script>
+<head>
+    <meta charset="utf-8" />
+    <title>Tax Calculator</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <div class="parentContainer">
+        <div class="container">
+            <p>Preis Netto</p>
+            <p>Mwst</p>
+            <p>Preis Brutto</p>
+        </div>
+    </div>
+    <div class="parentContainer" id="content"></div>
+    <button id="addInput" onclick=createInputFormula()>+</button>
+    <div class="parentContainer" id="results">
+        <div class="container">
+            <p>NETTO GESAMT</p>
+            <p>MWST GESAMT</p>
+            <p>BRUTTO GESAMT</p>
+        </div>
+        <div class="container">
+            <p id="netTotal">0,00 €</p>
+            <p id="taxTotal">0,00 €</p>
+            <p id="brutTotal">0,00 €</p>
+        </div>
+    </div>
+    <script src="./index.js"></script>
 </body>
-</html> 
+
+</html>
