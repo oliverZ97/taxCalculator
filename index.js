@@ -29,18 +29,18 @@ function calculateNetto(netto_id, tax_id, brutto_id) {
     let tax = getInputFromTax(tax_id);
     let netto = parseFloat(brutto);
     if(tax != 0){
-        netto = brutto/(100 + tax);
+        taxVal = (100 + parseFloat(tax))/100
+        netto = (brutto/taxVal).toFixed(2);
     } 
-    console.log(netto);
     setNettoToDisplayOnChange(netto, netto_id)
 }
 
 function checkNettoOrBrutto(netto_id, tax_id, brutto_id) {
-    if(document.getElementById(netto_id).value === undefined){
-        console.log("NETTO");
-        calculateNetto(netto_id, tax_id, brutto_id)
+    if(document.getElementById(netto_id).value === ""){
+        if(document.getElementById(brutto_id).value !== ""){
+            calculateNetto(netto_id, tax_id, brutto_id)
+        }
     } else {
-        console.log("BRUTTO")
         calculateBrutto(netto_id, tax_id, brutto_id)
     }
 }
