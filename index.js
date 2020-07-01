@@ -108,6 +108,7 @@ function createInputFormula() {
 
         //add taxDropdown attributes
         taxDropdown.setAttribute("id", "taxType" + i);
+        taxDropdown.setAttribute("class", "taxSelect")
         taxDropdown.setAttribute("name", "taxType");
         taxDropdown.onchange = () => { checkNettoOrBrutto("nettoInput_" + i, "taxType" + i, "bruttoInput_" + i) };
 

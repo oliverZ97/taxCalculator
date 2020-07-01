@@ -1,4 +1,9 @@
 body {
+    color: #272635;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.main {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -8,6 +13,7 @@ body {
     width: 60%;
     margin-left: auto;
     margin-right: auto;
+    background-color: #e8e9f3;
 }
 
 .parentContainer {
@@ -18,20 +24,25 @@ body {
     width: 90%
 }
 
-#addInput {
-    width: 90%;
-    height: 30px;
-    margin-top: 1%;
-    margin-bottom: 1%;
-    background-color: #d8ddde;
-    border: 1px solid #cfcbca;
-    color: #8c271e;
-}
-
 .container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+}
+
+.taxSelect {
+    margin-left: 60px;
+}
+
+#addInput {
+    width: 90%;
+    height: 30px;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    background-color: #b1e5f2;
+    border: 1px solid #272635;
+    border-radius: 5px;
+    font-size: 20px;
 }
