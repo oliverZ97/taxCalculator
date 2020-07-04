@@ -1,30 +1,47 @@
 //**************************************************************************************/
 //**GET VALUES OF THE INPUT FIELDS******************************************************/
-function getInputFromNetto(id) {
-    return checkValidChars(document.getElementById(id).value);
+function getInputFromField(id) {
+    let cleanInput = checkValidChars(document.getElementById(id).value);
+    document.getElementById(id).value = cleanInput;
+    return cleanInput
 }
 
 function getInputFromTax(id) {
     return document.getElementById(id).value;
 }
 
-function getInputFromBrutto(id) {
-    return checkValidChars(document.getElementById(id).value);
-}
-
+//**************************************************************************************/
+//**CHECK IF ONLY DIGITS OR DOT ARE USED************************************************/
 function checkValidChars(input) {
     let regex = RegExp(/[a-zA-Z!\"§$%&\/\(\),]/g);
     if (regex.test(input)) {
-        console.log("Please Check your input only contains numbers or a point")
-        return 0;
+        alert("Please Check your input only contains numbers or a dot")
+        input = input.replace(",", ".");
+        return setDecimalPlaces(input);
     } else {
-        return input
+        return setDecimalPlaces(input);
     }
+}
+//**************************************************************************************/
+//**CHECK IF ONLY DIGITS OR DOT ARE USED************************************************/
+function setDecimalPlaces(input) {
+    let number;
+    if(input.isNaN) {
+        let str = input.replace("/[a-zA-Z!\"§$%&\/\(\),]/g", "");
+        number = parseFloat(str).toFixed(2);
+    } else {
+        number = parseFloat(input).toFixed(2);
+    }
+    return setEUROSign(number);
+}
+
+function setEUROSign(number) {
+    return number + " €";
 }
 //**************************************************************************************/
 //**CALCULATE BRUTTO TAX****************************************************************/
 function calculateBrutto(netto_id, tax_id, brutto_id) {
-    let netto = getInputFromNetto(netto_id).replace(" €", "");
+    let netto = getInputFromField(netto_id).replace(" €", "");
     let tax = getInputFromTax(tax_id);
     let brutto = parseFloat(netto);
     if(tax != "0") {
@@ -36,7 +53,7 @@ function calculateBrutto(netto_id, tax_id, brutto_id) {
 
 //**CALCULATE NETTO TAX*****************************************************************/
 function calculateNetto(netto_id, tax_id, brutto_id) {
-    let brutto = getInputFromBrutto(brutto_id).replace(" €", "");
+    let brutto = getInputFromField(brutto_id).replace(" €", "");
     let tax = getInputFromTax(tax_id);
     let netto = parseFloat(brutto);
     if(tax != 0){
@@ -47,35 +64,30 @@ function calculateNetto(netto_id, tax_id, brutto_id) {
     calcResult()
 }
 
+//**************************************************************************************/
+//**CHECK IF NETTO OR BRUTTO FIELD NEEDS TO BE FILLED***********************************/
 function checkNettoOrBrutto(netto_id, tax_id, brutto_id) {
     if(document.getElementById(netto_id).value === ""){
         if(document.getElementById(brutto_id).value !== ""){
-            setEuroSignToInput(brutto_id);
             calculateNetto(netto_id, tax_id, brutto_id)
         }
     } else {
-        setEuroSignToInput(netto_id);
         calculateBrutto(netto_id, tax_id, brutto_id)
     }
 }
 
 //**SET BRUTTO TO DISPLAY***************************************************************/
 function setBruttoToDisplayOnChange(brutto, brutto_id) {
-    document.getElementById(brutto_id).value = brutto + " €";
+    document.getElementById(brutto_id).value = setDecimalPlaces(brutto);
 }
 
 //**SET NETTO TO DISPLAY****************************************************************/
 function setNettoToDisplayOnChange(netto, netto_id) {
-    document.getElementById(netto_id).value = netto + " €";
+    document.getElementById(netto_id).value = setDecimalPlaces(netto);
 }
 
-function setEuroSignToInput(id) {
-
-    let val = document.getElementById(id).value;
-    val = val.replace(" €", "");
-    document.getElementById(id).value = val + " €";
-}
-
+//**************************************************************************************/
+//**CREATE AND SET INPUT FIELDS*********************************************************/
 function createInputFormula() {
     let content = document.getElementById("content");
     let numberOfGroups = 1
@@ -150,6 +162,8 @@ function createInputFormula() {
     }
 }
 
+//**************************************************************************************/
+//**CALCULATE THE TOTAL RESULTS*********************************************************/
 function calcResult() {
     let netTotal = 0;
     let brutTotal = 0;
@@ -173,12 +187,16 @@ function calcResult() {
     setTotalToTextFields(brutTotal, netTotal, taxTotal)
 }
 
+//**************************************************************************************/
+//**SET TOTALS TO TEXT FIELDS***********************************************************/
 function setTotalToTextFields(brutTotal, netTotal, taxTotal) {
     document.getElementById("netTotal").innerHTML = netTotal + " €";
     document.getElementById("taxTotal").innerHTML = taxTotal + " €";
     document.getElementById("brutTotal").innerHTML = brutTotal + " €";
 }
 
+//**************************************************************************************/
+//**RESET INPUT OF FIELDS FROM ONE CONTAINER********************************************/
 function resetFieldsInContainer(containerId){
     let fields = Object.values(document.getElementById(containerId).children);
     fields.forEach((element) => {
