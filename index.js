@@ -67,9 +67,6 @@ function calculateNetto(netto_id, tax_id, brutto_id) {
 //**************************************************************************************/
 //**CHECK IF NETTO OR BRUTTO FIELD NEEDS TO BE FILLED***********************************/
 function checkNettoOrBrutto(netto_id, tax_id, brutto_id) {
-    console.log("Netto " + netto_id);
-    console.log("Tax " + tax_id);
-    console.log("Brutto " + brutto_id);
     if(document.getElementById(netto_id).value === ""){
         if(document.getElementById(brutto_id).value !== ""){
             calculateNetto(netto_id, tax_id, brutto_id)
