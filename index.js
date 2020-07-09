@@ -51,6 +51,7 @@ function calculateBrutto(netto_id, tax_id, brutto_id) {
     calcResult()
 }
 
+//**************************************************************************************/
 //**CALCULATE NETTO TAX*****************************************************************/
 function calculateNetto(netto_id, tax_id, brutto_id) {
     let brutto = getInputFromField(brutto_id).replace(" €", "");
@@ -76,11 +77,13 @@ function checkNettoOrBrutto(netto_id, tax_id, brutto_id) {
     }
 }
 
+//**************************************************************************************/
 //**SET BRUTTO TO DISPLAY***************************************************************/
 function setBruttoToDisplayOnChange(brutto, brutto_id) {
     document.getElementById(brutto_id).value = setDecimalPlaces(brutto);
 }
 
+//**************************************************************************************/
 //**SET NETTO TO DISPLAY****************************************************************/
 function setNettoToDisplayOnChange(netto, netto_id) {
     document.getElementById(netto_id).value = setDecimalPlaces(netto);
@@ -131,7 +134,6 @@ function createInputFormula() {
         bruttoInput.setAttribute("id", "bruttoInput_" + actual);
         bruttoInput.setAttribute("placeholder", "Brutto");
         bruttoInput.setAttribute("type", "text");
-        //bruttoInput.setAttribute("pattern", "[0-9.]+")
         bruttoInput.onchange = () => { checkNettoOrBrutto("nettoInput_" + actual, "taxType" + actual, "bruttoInput_" + actual) };
 
         //add resetFieldButton attributes
