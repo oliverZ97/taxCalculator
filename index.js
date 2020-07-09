@@ -45,7 +45,7 @@ function calculateBrutto(netto_id, tax_id, brutto_id) {
     let tax = getInputFromTax(tax_id);
     let brutto = parseFloat(netto);
     if(tax != "0") {
-        brutto = (parseFloat(netto) + parseFloat(((netto/100)*tax))).toFixed(2)
+        brutto = parseFloat(netto) + parseFloat(((netto/100)*tax));
     }
     setBruttoToDisplayOnChange(brutto, brutto_id)
     calcResult()
@@ -58,7 +58,7 @@ function calculateNetto(netto_id, tax_id, brutto_id) {
     let netto = parseFloat(brutto);
     if(tax != 0){
         taxVal = (100 + parseFloat(tax))/100
-        netto = (brutto/taxVal).toFixed(2);
+        netto = (brutto/taxVal);
     } 
     setNettoToDisplayOnChange(netto, netto_id)
     calcResult()
@@ -67,6 +67,9 @@ function calculateNetto(netto_id, tax_id, brutto_id) {
 //**************************************************************************************/
 //**CHECK IF NETTO OR BRUTTO FIELD NEEDS TO BE FILLED***********************************/
 function checkNettoOrBrutto(netto_id, tax_id, brutto_id) {
+    console.log("Netto " + netto_id);
+    console.log("Tax " + tax_id);
+    console.log("Brutto " + brutto_id);
     if(document.getElementById(netto_id).value === ""){
         if(document.getElementById(brutto_id).value !== ""){
             calculateNetto(netto_id, tax_id, brutto_id)
@@ -90,11 +93,14 @@ function setNettoToDisplayOnChange(netto, netto_id) {
 //**CREATE AND SET INPUT FIELDS*********************************************************/
 function createInputFormula() {
     let content = document.getElementById("content");
+    let index = content.childElementCount;
     let numberOfGroups = 1
     if(!content.hasChildNodes()){
         numberOfGroups = 3
     }
     for (let i = 0; i < numberOfGroups; i++) {
+        index ++;
+        let actual = index;
         let container = document.createElement("div");
         let nettoInput = document.createElement("input");
         let taxDropdown = document.createElement("select");
@@ -108,33 +114,34 @@ function createInputFormula() {
         let taxNineteen = document.createElement("option");
 
         //add container attributes
-        container.setAttribute("id", "container_" + i);
+        container.setAttribute("id", "container_" + actual);
         container.setAttribute("class", "container");
 
         //add nettoInput attributes
-        nettoInput.setAttribute("id", "nettoInput_" + i);
+        nettoInput.setAttribute("id", "nettoInput_" + actual);
         nettoInput.setAttribute("placeholder", "Netto");
         nettoInput.setAttribute("type", "text");
         //nettoInput.setAttribute("pattern", "[0-9.]+")
-        nettoInput.onchange = () => { checkNettoOrBrutto("nettoInput_" + i, "taxType" + i, "bruttoInput_" + i) };
+        nettoInput.onchange = () => { checkNettoOrBrutto("nettoInput_" + actual, "taxType" + actual, "bruttoInput_" + actual) };
 
         //add taxDropdown attributes
-        taxDropdown.setAttribute("id", "taxType" + i);
-        taxDropdown.setAttribute("class", "taxSelect")
+        taxDropdown.setAttribute("id", "taxType" + actual);
+        taxDropdown.setAttribute("class", "taxSelect");
         taxDropdown.setAttribute("name", "taxType");
-        taxDropdown.onchange = () => { checkNettoOrBrutto("nettoInput_" + i, "taxType" + i, "bruttoInput_" + i) };
+        taxDropdown.onchange = () => { checkNettoOrBrutto("nettoInput_" + actual, "taxType" + actual, "bruttoInput_" + actual) };
 
         //add bruttoInput attributes
-        bruttoInput.setAttribute("id", "bruttoInput_" + i);
+        bruttoInput.setAttribute("id", "bruttoInput_" + actual);
         bruttoInput.setAttribute("placeholder", "Brutto");
         bruttoInput.setAttribute("type", "text");
         //bruttoInput.setAttribute("pattern", "[0-9.]+")
-        bruttoInput.onchange = () => { checkNettoOrBrutto("nettoInput_" + i, "taxType" + i, "bruttoInput_" + i) };
+        bruttoInput.onchange = () => { checkNettoOrBrutto("nettoInput_" + actual, "taxType" + actual, "bruttoInput_" + actual) };
 
         //add resetFieldButton attributes
         resetFields.textContent = "Reset"
+        resetFields.setAttribute("id", "reset_" + actual);
         resetFields.onclick = () => {
-            resetFieldsInContainer("container_" + i)
+            resetFieldsInContainer("container_" + actual)
         }
 
         //add option attributes
